@@ -13,9 +13,13 @@ public class AircraftService {
     private List<Aircraft> aircraftList = new ArrayList<>();
 
     public AircraftService() {
-         List<Airport> allAirports = new ArrayList<>();
-         AirportService airportService = new AirportService();
-         allAirports = airportService.getAllAirport();
+       populateList();
+    }
+
+    public void populateList() {
+        List<Airport> allAirports = new ArrayList<>();
+        AirportService airportService = new AirportService();
+        allAirports = airportService.getAllAirport();
 
         Aircraft aircraft1 = new Aircraft();
         aircraft1.setId(1);
@@ -39,7 +43,6 @@ public class AircraftService {
         aircraft3.setAirlineName("Air Canada");
         aircraft3.setNumberOfPassengers(70);
         aircraftList.add(aircraft3);
-
     }
 
     public List<Aircraft> getAllAircraft() {
