@@ -42,13 +42,24 @@ public class AircraftController {
 
     @PostMapping("/aircraft/addAircraft")
     public void addAircraft(@RequestBody Aircraft aircraft){
-        actionService.addAction("aircraft", "create", Map.of("id", aircraft.getId(), "type", aircraft.getType(), "numberOfPassengers", aircraft.getNumberOfPassengers(), "allowedAirportList", aircraft.getAllowedAirportList()));
+        actionService.addAction("aircraft", "create", Map.of("id", aircraft.getId(), "type",  aircraft.getType(), "airlineName",aircraft.getAirlineName(), "numberOfPassengers", aircraft.getNumberOfPassengers(), "allowedAirportList", aircraft.getAllowedAirportList()));
         historyService.addToHistory("addAircraft()", "/aircraft/addAircraft", LocalDateTime.now());
         aircraftService.addAircraft(aircraft);
     }
 
     @DeleteMapping("/aircraft/deleteAircraft/{id}")
     public List<Aircraft> deleteAirportById(@PathVariable int id) {
+        Aircraft aircraftForAction = new Aircraft();
+        List<Aircraft> aircraftlist = aircraftService.getAllAircraft();
+        for (Aircraft aircraft : aircraftlist){
+            if (aircraft.getId() == id) {
+                aircraftForAction = aircraft;
+            }
+        }
+        if (aircraftForAction != null) {
+            actionService.addAction("aircraft", "delete", Map.of("id", aircraftForAction.getId(), "type", aircraftForAction.getType(),"airlineName", aircraftForAction.getAirlineName(), "numberOfPassengers", aircraftForAction.getNumberOfPassengers(), "allowedAirportList", aircraftForAction.getAllowedAirportList()));
+        }
+
         String url = "/aircraft/deleteAircraft/" + String.valueOf(id);
         historyService.addToHistory("searchAircraft()", url, LocalDateTime.now());
         return aircraftService.deleteAircraftById(id);

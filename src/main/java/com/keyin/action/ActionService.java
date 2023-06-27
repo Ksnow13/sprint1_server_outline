@@ -1,9 +1,12 @@
 package com.keyin.action;
 
+import com.keyin.aircraft.Aircraft;
 import com.keyin.aircraft.AircraftService;
+import com.keyin.airport.Airport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -27,14 +30,29 @@ public class ActionService {
 
     public void undoAction() {
 
+        // works somewhat correctly, doesn't like deleting last object in stack
+        // map it out on paper to understand the undo method better
+
+        // maybe use a switch statement instead of if's
+
         if(actionStack.size() > 0) {
-            if (actionStack.peek().getObjectName() == "aircraft") {
-                if (actionStack.peek().getOperation() == "create") {
-                    System.out.println("reached");
+            if (actionStack.peek().getOperation() == "create") {
+                if (actionStack.peek().getObjectName() == "aircraft") {
                     aircraftService.deleteAircraftById((Integer) actionStack.peek().getParameters().get("id"));
-                    System.out.println("deleted");
                     actionStack.pop();
-                    System.out.println("popped");
+                }
+            }
+
+            if (actionStack.peek().getOperation() == "delete") {
+                if (actionStack.peek().getObjectName() == "aircraft"){
+                    Aircraft aircraftToReAdd = new Aircraft();
+                    aircraftToReAdd.setId((Integer) actionStack.peek().getParameters().get("id"));
+                    aircraftToReAdd.setType((String) actionStack.peek().getParameters().get("type"));
+                    aircraftToReAdd.setAirlineName((String) actionStack.peek().getParameters().get("airlineName"));
+                    aircraftToReAdd.setNumberOfPassengers((Integer) actionStack.peek().getParameters().get("numberOfPassengers"));
+                    aircraftToReAdd.setAllowedAirportList((List<Airport>) actionStack.peek().getParameters().get("allowedAirportList"));
+                    aircraftService.addAircraft(aircraftToReAdd);
+                    actionStack.pop();
                 }
             }
         } else {
