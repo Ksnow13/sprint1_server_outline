@@ -15,7 +15,22 @@ public class HistoryController {
     private HistoryService historyService;
 
     @GetMapping("/history")
-    public List<History> getAllHistory() {
+    public History getPeekHistory() {
+        return historyService.getPeekHistory();
+    }
+
+    @GetMapping("/allHistory")
+        public List<History> getAllHistory(){
         return historyService.getAllHistory();
+    }
+
+    @GetMapping("/undoHistory")
+    public History undoHistory(){
+        return historyService.undoHistory();
+    }
+
+    @GetMapping("/redoHistory")
+    public History redoHistory(){
+        return historyService.redoHistory();
     }
 }
