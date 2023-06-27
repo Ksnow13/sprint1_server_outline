@@ -1,5 +1,6 @@
 package com.keyin.aircraft;
 
+import com.keyin.action.ActionService;
 import com.keyin.airport.Airport;
 import com.keyin.history.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -15,6 +17,8 @@ public class AircraftController {
     private AircraftService aircraftService;
     @Autowired
     private HistoryService historyService; //-------------------------------------
+    @Autowired
+    private ActionService actionService; //-------------------------------------
 
 
     @GetMapping("/aircraft")
@@ -38,6 +42,7 @@ public class AircraftController {
 
     @PostMapping("/aircraft/addAircraft")
     public void addAircraft(@RequestBody Aircraft aircraft){
+        actionService.addAction("aircraft", "create", Map.of("id", aircraft.getId(), "type", aircraft.getType(), "numberOfPassengers", aircraft.getNumberOfPassengers(), "allowedAirportList", aircraft.getAllowedAirportList()));
         historyService.addToHistory("addAircraft()", "/aircraft/addAircraft", LocalDateTime.now());
         aircraftService.addAircraft(aircraft);
     }
