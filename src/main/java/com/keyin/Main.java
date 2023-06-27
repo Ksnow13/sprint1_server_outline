@@ -40,5 +40,14 @@ public class Main {
             System.out.println(airport.getName());
         }
 
+        Airport ar = new Airport();
+
+        ar.setId(1);
+        ar.setName("bayRoberts");
+        ar.setAreaCode("aaaaa");
+        ar.setCityId(4);
+
+        System.out.println(ar.toString());
+
     }
 }
